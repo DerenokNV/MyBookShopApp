@@ -8,33 +8,28 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 @Controller
-@RequestMapping("/bookshop")
 public class MainPageController {
 
   private final BookService bookService;
-  private final AuthorService authorService;
 
   @Autowired
-  public MainPageController( BookService bookService, AuthorService authorService ) {
+  public MainPageController( BookService bookService ) {
     this.bookService = bookService;
-    this.authorService = authorService;
   }
 
-  @GetMapping("/main")
+  @GetMapping("/")
   public String mainPage( Model model ) {
     model.addAttribute( "bookData", bookService.getBooksData() );
+    model.addAttribute( "booksList", bookService.getBooksData() );
+    model.addAttribute( "searchPlaceholder", "new search Placeholder" );
+    model.addAttribute( "serverTime", new SimpleDateFormat( "hh:mm:ss" ).format( new Date() ) );
+    model.addAttribute( "placeholderTextPart2", "SERVER" );
+    model.addAttribute( "messageTemplate", "searchbar.placeholder2" );
     return "index";
   }
 
-  @GetMapping("/genres")
-  public String genresPage() {
-    return "/genres/index";
-  }
-
-  @GetMapping("/authors")
-  public String authorPage( Model model ) {
-    model.addAttribute( "authorData", authorService.getAuthorData() );
-    return "/authors/index";
-  }
 }

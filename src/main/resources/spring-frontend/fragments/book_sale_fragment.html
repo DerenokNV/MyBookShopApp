@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div class="Card-picture" th:fragment="bookSale">
+   <a href="#a" th:href="${book.id}">
+      <img src="/assets/img/content/main/card.jpg" alt="card.jpg"/>
+      <div class="Card-sale" id="Card-sale_id" th:if="${book.sale != null}" th:text="${book.sale} + '%скидка'">30% скидка</div>
+   </a>
+</div>
+</html>

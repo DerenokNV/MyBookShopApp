@@ -24,10 +24,11 @@ public class AuthorService {
 
   public Map<String,List<Author>> getAuthorData() {
     List<Author> authors = jdbcTemplate.query( "select * from AUTHORS a ", ( ResultSet rs, int rowNum ) -> {
-              Author author = new Author();
-              author.setId( rs.getInt( "id" ) );
-              author.setFio( rs.getString( "fio" ) );
-              author.setDescription( rs.getString( "description" ) );
+              Author author = Author.builder()
+                      .id( rs.getInt( "id" ) )
+                      .fio( rs.getString( "fio" ) )
+                      .description( rs.getString( "description" ) )
+                      .build();
               return author;
             });
     return authors.stream().collect( Collectors.groupingBy( x -> x.getFio().substring( 0, 1 ) ) );

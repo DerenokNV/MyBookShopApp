@@ -1,5 +1,6 @@
 package com.example.MyBookShopApp.services;
 
+import com.example.MyBookShopApp.Toolkit.Toolkit;
 import com.example.MyBookShopApp.data.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -24,12 +25,14 @@ public class BookService {
                                                "from BOOKS b" +
                                                "     inner join AUTHORS a on a.ID = b.AUTHOR ",
                                            (ResultSet rs, int rowNum ) -> {
-      Book book = new Book();
-      book.setId( rs.getInt( "id" ) );
-      book.setAuthor( rs.getString( "fio" ) );
-      book.setTitle( rs.getString( "title" ) );
-      book.setPriceOld( rs.getString( "priceOld" ) );
-      book.setPrice( rs.getString( "price" ) );
+       Book book = Book.builder()
+              .id( rs.getInt( "id" ) )
+              .author( rs.getString( "fio" ) )
+              .title( rs.getString( "title" ) )
+              .priceOld( rs.getString( "priceOld" ) )
+              .price( rs.getString( "price" ) )
+              .sale(Toolkit.calcSaleBook( rs.getString( "priceOld" ), rs.getString( "price" ) ) )
+              .build();
       return book;
     });
     return new ArrayList<>( books );
