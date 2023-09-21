@@ -1,4 +1,4 @@
-package com.example.MyBookShopApp.data;
+package com.example.MyBookShopApp.dataExample;
 
 import org.springframework.stereotype.Repository;
 

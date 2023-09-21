@@ -1,7 +1,15 @@
-package skbx.example.struct.book.links;
+package com.example.MyBookShopApp.data.struct.book.links;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "book2genre")
 public class Book2GenreEntity {

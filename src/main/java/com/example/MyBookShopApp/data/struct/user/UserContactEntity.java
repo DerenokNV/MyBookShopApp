@@ -1,10 +1,18 @@
-package skbx.example.struct.user;
+package com.example.MyBookShopApp.data.struct.user;
 
-import skbx.example.struct.enums.ContactType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import com.example.MyBookShopApp.data.struct.enums.ContactType;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "user_contact")
 public class UserContactEntity {
@@ -32,68 +40,4 @@ public class UserContactEntity {
 
     @Column(columnDefinition = "VARCHAR(255) NOT NULL")
     private String contact;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public ContactType getType() {
-        return type;
-    }
-
-    public void setType(ContactType type) {
-        this.type = type;
-    }
-
-    public short getApproved() {
-        return approved;
-    }
-
-    public void setApproved(short approved) {
-        this.approved = approved;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public int getCodeTrails() {
-        return codeTrails;
-    }
-
-    public void setCodeTrails(int codeTrails) {
-        this.codeTrails = codeTrails;
-    }
-
-    public LocalDateTime getCodeTime() {
-        return codeTime;
-    }
-
-    public void setCodeTime(LocalDateTime codeTime) {
-        this.codeTime = codeTime;
-    }
-
-    public String getContact() {
-        return contact;
-    }
-
-    public void setContact(String contact) {
-        this.contact = contact;
-    }
 }

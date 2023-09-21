@@ -1,8 +1,17 @@
-package skbx.example.struct.user;
+package com.example.MyBookShopApp.data.struct.user;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "users")
 public class UserEntity {
@@ -22,44 +31,4 @@ public class UserEntity {
 
     @Column(columnDefinition = "VARCHAR(255) NOT NULL")
     private String name;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getHash() {
-        return hash;
-    }
-
-    public void setHash(String hash) {
-        this.hash = hash;
-    }
-
-    public LocalDateTime getRegTime() {
-        return regTime;
-    }
-
-    public void setRegTime(LocalDateTime regTime) {
-        this.regTime = regTime;
-    }
-
-    public int getBalance() {
-        return balance;
-    }
-
-    public void setBalance(int balance) {
-        this.balance = balance;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }

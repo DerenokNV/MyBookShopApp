@@ -1,24 +1,22 @@
 package com.example.MyBookShopApp.config;
 
-import com.example.MyBookShopApp.data.TestEntity;
-import com.example.MyBookShopApp.data.TestEntityDao;
+import com.example.MyBookShopApp.dataExample.TestEntity;
+import com.example.MyBookShopApp.dataExample.TestEntityDao;
 import jakarta.persistence.EntityManagerFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Configuration;
 
-import java.io.IOException;
 import java.util.logging.Logger;
 
-@Configuration
-public class CommandLineRunnerImpl implements CommandLineRunner {
+//@Configuration
+public class CommandLineRunnerImplHibenate implements CommandLineRunner {
 
   EntityManagerFactory entityManagerFactory;
   TestEntityDao testEntityDao;
 
-  public CommandLineRunnerImpl( EntityManagerFactory entityManagerFactory, TestEntityDao testEntityDao ) {
+  public CommandLineRunnerImplHibenate(EntityManagerFactory entityManagerFactory, TestEntityDao testEntityDao ) {
     this.entityManagerFactory = entityManagerFactory;
     this.testEntityDao = testEntityDao;
   }
@@ -31,14 +29,14 @@ public class CommandLineRunnerImpl implements CommandLineRunner {
 
     TestEntity readTestEntity = testEntityDao.findOne( 3L ); //readTestEntityById( 3L );
     if ( readTestEntity != null ) {
-      Logger.getLogger( CommandLineRunnerImpl.class.getSimpleName() ).info( readTestEntity.toString() );
+      Logger.getLogger( CommandLineRunnerImplHibenate.class.getSimpleName() ).info( readTestEntity.toString() );
     } else {
       throw new NullPointerException();
     }
 
     TestEntity updateTestEntity = updateTestEntityById( 5L );
     if ( updateTestEntity != null ) {
-      Logger.getLogger( CommandLineRunnerImpl.class.getSimpleName() ).info( updateTestEntity.toString() );
+      Logger.getLogger( CommandLineRunnerImplHibenate.class.getSimpleName() ).info( updateTestEntity.toString() );
     } else {
       throw new NullPointerException();
     }

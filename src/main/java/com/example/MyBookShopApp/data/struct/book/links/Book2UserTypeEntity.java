@@ -1,7 +1,15 @@
-package skbx.example.struct.book.links;
+package com.example.MyBookShopApp.data.struct.book.links;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "book2user_type")
 public class Book2UserTypeEntity {
@@ -15,28 +23,4 @@ public class Book2UserTypeEntity {
 
     @Column(columnDefinition = "VARCHAR(255) NOT NULL")
     private String name;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }

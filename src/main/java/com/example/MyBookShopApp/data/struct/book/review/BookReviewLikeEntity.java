@@ -1,8 +1,17 @@
-package skbx.example.struct.book.review;
+package com.example.MyBookShopApp.data.struct.book.review;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "book_review_like")
 public class BookReviewLikeEntity {
@@ -22,44 +31,4 @@ public class BookReviewLikeEntity {
 
     @Column(columnDefinition = "SMALLINT NOT NULL")
     private short value;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getReviewId() {
-        return reviewId;
-    }
-
-    public void setReviewId(int reviewId) {
-        this.reviewId = reviewId;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public LocalDateTime getTime() {
-        return time;
-    }
-
-    public void setTime(LocalDateTime time) {
-        this.time = time;
-    }
-
-    public short getValue() {
-        return value;
-    }
-
-    public void setValue(short value) {
-        this.value = value;
-    }
 }
