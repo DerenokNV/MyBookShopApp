@@ -61,7 +61,7 @@
               <h2 class="Authors-title" th:id="${element.key}" th:text="${element.key}">
               </h2>
               <div class="Authors-letter" th:each="testAuthor : ${authorData.get(element.key)}">
-                <div class="Authors-item"><a href="/author/slug" th:text="${testAuthor.fio}">Абгарян Наринэ</a>
+                <div class="Authors-item"><a href="/author/slug" th:text="${testAuthor.name}">Абгарян Наринэ</a>
                 </div>
               </div>
             </div>
