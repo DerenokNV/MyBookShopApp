@@ -18,7 +18,7 @@
   <!--meta( http-equiv="cache-control" content="no-cache")-->
   <!--meta( http-equiv="expires" content="0")-->
   <!--link(rel="preload" href="assets/css/extra.min.css?v=" + version as="style" crossorigin="anonymous")-->
-  <link href="favicon.ico" rel="shortcut icon">
+  <!--link href="favicon.ico" rel="shortcut icon"-->
   <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-SemiBold.woff2" as="font" crossorigin="anonymous">
   <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-Light.woff2" as="font" crossorigin="anonymous">
   <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-Medium.woff2" as="font" crossorigin="anonymous">
@@ -51,6 +51,37 @@
         <h1 class="Middle-title">Жанры
         </h1>
         <div class="Section">
+          <div class="Tags Tags_genres" th:each="model: ${genresModel}">
+            <div class="Tags Tags_embed">
+              <div class="Tags-title">
+                <div class="Tag">
+                  <a th:href="'/genres/slug/' + ${genresInfo.get(model.key)[0].id}" th:text="${genresInfo.get(model.key)[0].name} + ' (' + ${genresInfo.get(model.key)[0].genres.size()} +') ' " >Лёгкое чтение<span class="undefined-amount" >(15638)</span></a>
+                </div>
+              </div>
+
+              <div class="Tag" th:if="${model.value != null}" th:each="modelCh: ${model.value}" >
+                <div class="Tag" th:if="${modelCh.value == null}">
+                   <a th:href="'/genres/slug/' + ${genresInfo.get(modelCh.key)[0].id}"  th:text="${genresInfo.get(modelCh.key)[0].name}  + ' (' + ${genresInfo.get(modelCh.key)[0].genres.size()} +') ' ">Фантастика<span class="undefined-amount" >(44333)</span></a>
+                </div>
+
+                <div class="Tags" th:unless="${modelCh.value == null}" >
+                  <div class="Tags-title">
+                    <div class="Tag"  >
+                      <a th:href="'/genres/slug/' + ${genresInfo.get(modelCh.key)[0].id}" th:text="${genresInfo.get(modelCh.key)[0].name}  + ' (' + ${genresInfo.get(modelCh.key)[0].genres.size()} +') ' ">Детективы<span class="undefined-amount">(10)</span></a>
+                    </div>
+                  </div>
+                  <div class="Tag" th:each="modelCh2: ${modelCh.value}" >
+                    <div class="Tag" th:if="${modelCh2.value == null}">
+                      <a th:href="'/genres/slug/' + ${genresInfo.get(modelCh2.key)[0].id}"  th:text="${genresInfo.get(modelCh2.key)[0].name}  + ' (' + ${genresInfo.get(modelCh2.key)[0].genres.size()} +') ' ">Фантастика<span class="undefined-amount">(44333)</span></a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+
+
+        <!--div class="Section">
           <div class="Tags Tags_genres">
             <div class="Tags Tags_embed">
               <div class="Tags-title">
@@ -194,8 +225,9 @@
               <div class="Tag"><a href="/genres/slug.html">Драма, пьеса<span class="undefined-amount">(15638)</span></a>
               </div>
             </div>
-          </div>
+          </div-->
         </div>
+
       </main>
     </div>
   </div>

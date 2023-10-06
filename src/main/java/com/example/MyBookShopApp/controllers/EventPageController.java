@@ -17,10 +17,10 @@ public class EventPageController {
     return "postponed";
   }
 
-  @GetMapping("/search/")
+ /* @GetMapping("/search/")
   public String searchPages() {
     return "/search/index";
-  }
+  }*/
 
   @GetMapping("/signin")
   public String signinPages() {
