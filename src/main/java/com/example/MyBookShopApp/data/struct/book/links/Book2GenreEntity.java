@@ -1,5 +1,8 @@
 package com.example.MyBookShopApp.data.struct.book.links;
 
+import com.example.MyBookShopApp.data.Book;
+import com.example.MyBookShopApp.data.struct.genre.GenreEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,9 +21,12 @@ public class Book2GenreEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(columnDefinition = "INT NOT NULL")
-    private int bookId;
+    @ManyToOne
+    @JoinColumn(name = "book_id")
+    @JsonBackReference
+    private Book book;
 
-    @Column(columnDefinition = "INT NOT NULL")
-    private int genreId;
+    @ManyToOne
+    @JoinColumn(name = "genre_id")
+    private GenreEntity genre;
 }

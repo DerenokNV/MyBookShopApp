@@ -23,9 +23,10 @@
                     </div>
                     <div class="Header-search">
                         <div class="search">
-                            <form class="form form_search" action="#" method="post" data-searchlimit="20">
+                            <form class="form form_search" action="#" method="post" data-searchlimit="20"
+                                  th:object="${searchWordDto}" >
                                 <input class="search-input" id="query" name="query" type="text"
-                                       placeholder="Search over 30 million book titles" value=""/>
+                                       placeholder="Search over 30 million book titles" th:field="*{example}" value=""/>
                                 <button class="search-button" type="submit" name="search" id="search">Поиск
                                 </button>
                             </form>
@@ -48,7 +49,7 @@
                     <li class="menu-item" th:class="${main}"><a class="menu-link" th:href="@{/}" th:text="#{topbar.main}">Главная</a>
                     </li>
                     <li class="menu-item" th:class="${genres}"><a class="menu-link"
-                                                                  th:href="@{/genres}" th:text="#{topbar.genres}">Жанры</a>
+                                                                  th:href="@{/genres/index}" th:text="#{topbar.genres}">Жанры</a>
                     </li>
                     <li class="menu-item" th:class="${recent}"><a class="menu-link"
                                                                   th:href="@{/books/recent}" th:text="#{topbar.news}">Новинки</a>

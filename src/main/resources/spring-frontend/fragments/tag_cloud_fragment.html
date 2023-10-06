@@ -1,7 +1,22 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<div class="Tags" id="tags" th:fragment="cloud">
-    <div class="Tag Tag_xs"><a href="/tags/index.html">современная литература</a>
+<div class="Tags" id="tags" th:fragment="cloud" >
+    <!--div class="Tag Tag_sm" th:each="tag: ${tagsBook}">
+      <a href="/tags/index.html" th:text="${tag.description}" >классическая литература</a>
+    </div-->
+    <form class="form form_search" action="#" method="post" data-searchlimit="5"
+          th:object="${searchTagDto}" >
+        <div th:class="${element.value} == 0 ? 'Tag Tag_sm' :
+                         ( ${element.value} == 1 ? 'Tag Tag_xs' :
+                           (${element.value} == 2 ? 'Tag Tag_md' : 'Tag Tag_lg') ) "
+             th:each="element: ${tagsBookMap}">
+        <a th:href="${'/books/tag/' + element.key.id}" th:field="*{tagId}" th:text="${element.key.description}" >классическая литература</a>
+        </div>
+    </form>
+
+
+
+    <!--div class="Tag Tag_xs"><a href="/tags/index.html">современная литература</a>
     </div>
     <div class="Tag Tag_sm"><a href="/tags/index.html">классическая литература</a>
     </div>
@@ -98,6 +113,6 @@
     <div class="Tag"><a href="/tags/index.html">биография</a>
     </div>
     <div class="Tag"><a href="/tags/index.html">english</a>
-    </div>
+    </div-->
 </div>
 </html>

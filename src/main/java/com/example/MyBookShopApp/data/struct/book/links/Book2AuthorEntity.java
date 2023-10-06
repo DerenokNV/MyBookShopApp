@@ -2,6 +2,7 @@ package com.example.MyBookShopApp.data.struct.book.links;
 
 import com.example.MyBookShopApp.data.Author;
 import com.example.MyBookShopApp.data.Book;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,6 +29,7 @@ public class Book2AuthorEntity {
 
     @ManyToOne
     @JoinColumn(name = "book_id")
+    @JsonBackReference
     private Book book;
 
     @ManyToOne

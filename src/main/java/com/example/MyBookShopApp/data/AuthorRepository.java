@@ -8,6 +8,6 @@ import java.util.List;
 @Repository
 public interface AuthorRepository extends JpaRepository<Author,Integer> {
 
-  //List<Author> findAuthorsByBookSetId( Integer id );
+  Author findAuthorsById( Integer id );
 
 }
