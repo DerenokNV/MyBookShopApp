@@ -18,7 +18,7 @@
   <!--meta( http-equiv="cache-control" content="no-cache")-->
   <!--meta( http-equiv="expires" content="0")-->
   <!--link(rel="preload" href="assets/css/extra.min.css?v=" + version as="style" crossorigin="anonymous")-->
-  <link href="favicon.ico" rel="shortcut icon">
+  <!--link href="favicon.ico" rel="shortcut icon"-->
   <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-SemiBold.woff2" as="font" crossorigin="anonymous">
   <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-Light.woff2" as="font" crossorigin="anonymous">
   <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-Medium.woff2" as="font" crossorigin="anonymous">
@@ -50,16 +50,23 @@
       <main class="Middle-main">
         <h1 class="Middle-title">Корзина
         </h1>
+        <h3 th:if="${isCartEmpty}">Корзина пуста:(</h3>
+
+
         <form class="form Cart" action="#" method="post">
-          <div class="Cart-product">
+          <div class="Cart-product"
+               th:replace="~{fragments/books_cart_product_fragment :: product(status='CART')}">
+          </div>
+
+          <!--div class="Cart-product" th:each="book : ${bookCart}" >
             <div class="Cart-block Cart-block_row">
-              <div class="Cart-block Cart-block_pict"><a class="Cart-pict" href="#"><img class="Cart-img" src="/assets/img/content/main/card.jpg" alt="card.jpg"/></a>
+              <div class="Cart-block Cart-block_pict"><a class="Cart-pict" href="#"><img class="Cart-img" th:src="${book.image}" src="/assets/img/content/main/card.jpg" alt="card.jpg"/></a>
               </div>
               <div class="Cart-block Cart-block_row">
                 <div class="Cart-block Cart-block_info">
-                  <div class="Cart-author"><a href="#">Борис Васильевич Бедный</a>
+                  <div class="Cart-author"><a href="#" th:text="${book.authorsString}" >Борис Васильевич Бедный</a>
                   </div>
-                  <div class="Cart-title"><a href="#">Жизнь</a>
+                  <div class="Cart-title"><a href="#" th:text="${book.title}">Жизнь</a>
                   </div>
                   <div class="Cart-rating"><span class="Rating"><span class="Rating-stars"><span class="Rating-star Rating-star_view">
                           <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18">
@@ -104,7 +111,12 @@
                       </button>
                     </div>
                     <div class="Cart-btn">
-                      <button class="btn btn_danger btn_outline" data-sendstatus="UNLINK" data-bookid="[1122]"><span class="btn-icon"><img src="/assets/img/icons/trash.svg" alt="trash.svg"/></span><span class="btn-content">Удалить</span>
+                      <button class="btn btn_danger btn_outline" data-sendstatus="UNLINK" data-bookid="[1122]"
+                              th:attr="data-bookid = ${'cart/remove/' + book.slug}" >
+                        <span class="btn-icon">
+                          <img src="/assets/img/icons/trash.svg" alt="trash.svg"/>
+                        </span>
+                        <span class="btn-content">Удалить</span>
                       </button>
                     </div>
                   </div>
@@ -117,8 +129,10 @@
                 </div>
               </div>
             </div>
-          </div>
-          <div class="Cart-product">
+          </div-->
+
+
+          <!--div-- class="Cart-product">
             <div class="Cart-block Cart-block_row">
               <div class="Cart-block Cart-block_pict"><a class="Cart-pict" href="#"><img class="Cart-img" src="/assets/img/content/main/card.jpg" alt="card.jpg"/></a>
               </div>
@@ -188,8 +202,8 @@
                 </div>
               </div>
             </div>
-          </div>
-          <div class="Cart-product">
+          </div-->
+          <!--div-- class="Cart-product">
             <div class="Cart-block Cart-block_row">
               <div class="Cart-block Cart-block_pict"><a class="Cart-pict" href="#"><img class="Cart-img" src="/assets/img/content/main/card.jpg" alt="card.jpg"/></a>
               </div>
@@ -259,11 +273,11 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div-->
           <div class="Cart-total">
             <div class="Cart-block Cart-block_total">
-              <strong class="Cart-title">Итого:
-              </strong><span class="Cart-price">534 р.</span><span class="Cart-price_old">658 р.</span>
+              <strong class="Cart-title">Итого:</strong>
+              <span class="Cart-price" value="0">534 р.</span><span class="Cart-price_old">658 р.</span>
             </div>
             <div class="Cart-block"><a class="btn btn_success btn_md" href="/order.html">Купить</a>
             </div>
