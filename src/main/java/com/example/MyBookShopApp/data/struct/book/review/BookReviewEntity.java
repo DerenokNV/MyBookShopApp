@@ -1,11 +1,9 @@
 package com.example.MyBookShopApp.data.struct.book.review;
 
-import com.example.MyBookShopApp.data.struct.user.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-
 
 @Getter
 @Setter

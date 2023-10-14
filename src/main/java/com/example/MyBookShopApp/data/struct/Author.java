@@ -1,7 +1,6 @@
 package com.example.MyBookShopApp.data.struct;
 
 import com.example.MyBookShopApp.data.struct.book.links.Book2AuthorEntity;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,7 +8,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Getter

@@ -1,6 +1,5 @@
 package com.example.MyBookShopApp.data.struct.book.review;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -26,15 +26,15 @@ import java.util.stream.Collectors;
 @Service
 public class BookService {
 
-  private BookRepository bookRepository;
-  private AuthorRepository authorRepository;
-  private Book2AuthorEntityRepository book2AuthorEntityRepository;
-  private TagService tagService;
+  private final BookRepository bookRepository;
+  private final AuthorRepository authorRepository;
+  private final Book2AuthorEntityRepository book2AuthorEntityRepository;
+  private final TagService tagService;
 
-  private BookLikeEntityRepository bookLikeEntityRepository;
-  private BookReviewEntityRepository bookReviewEntityRepository;
-  private UserEntityRepository userEntityRepository;
-  private BookReviewLikeEntityRepository bookReviewLikeEntityRepository;
+  private final BookLikeEntityRepository bookLikeEntityRepository;
+  private final BookReviewEntityRepository bookReviewEntityRepository;
+  private final UserEntityRepository userEntityRepository;
+  private final BookReviewLikeEntityRepository bookReviewLikeEntityRepository;
 
   @Autowired
   public BookService( BookRepository bookRepository, AuthorRepository authorRepository, Book2AuthorEntityRepository book2AuthorEntityRepository,
@@ -50,8 +50,8 @@ public class BookService {
     this.bookReviewLikeEntityRepository = bookReviewLikeEntityRepository;
   }
 
-  public List<Book> getBooksByAuthor(String author ) {
-    List<Book> result =  new ArrayList();
+  public List<Book> getBooksByAuthor( String author ) {
+    List<Book> result = new ArrayList();
     List<Book> booksList =  getBooksData();
     for( Book bookList : booksList ) {
       Set<Author> bookAuthor = bookList.getAuthors();
@@ -61,7 +61,7 @@ public class BookService {
       }
     }
 
-    return result == null ? new ArrayList() : result;
+    return result;
   }
 
   /**
@@ -76,8 +76,8 @@ public class BookService {
       List<Book2AuthorEntity> linkList = book2AuthorEntityRepository.findBook2authorByBookId( book.getId() );
       for (Book2AuthorEntity link : linkList) {
         Optional<Author> oiptAuthor = authorRepository.findById( link.getAuthor().getId() );
-        if (oiptAuthor.isPresent()) {
-          book.addAuthor(oiptAuthor.get());
+        if ( oiptAuthor.isPresent() ) {
+          book.addAuthor( oiptAuthor.get() );
         }
       }
 
@@ -129,16 +129,16 @@ public class BookService {
 
   /**
    * Получить книги по Названию ( title% )
-   * @param title
-   * @return
-   * @throws BookstoreApiWrongParameterException
+   * @param title - искомое название
+   * @return - список книг
+   * @throws BookstoreApiWrongParameterException - ошибка
    */
   public List<Book> getBooksByTitle( String title ) throws BookstoreApiWrongParameterException {
     if ( title == null || title.isEmpty() ) {
       throw new BookstoreApiWrongParameterException( "Wrong values passed to one or more parameters" );
     } else {
       List<Book> data = bookRepository.findBooksByTitleContaining(title);
-      if ( data != null ||  !data.isEmpty() ){
+      if ( data != null && ! data.isEmpty() ){
         return data;
       } else {
         throw new BookstoreApiWrongParameterException( "No data found with specified parameters..." );
@@ -148,10 +148,10 @@ public class BookService {
 
   /**
    * Тут мы получаем пачками книги по тегам
-   * @param tagId
-   * @param offset
-   * @param limit
-   * @return
+   * @param tagId - ID тэга
+   * @param offset - сдвиг
+   * @param limit - лимит
+   * @return - пачка книг
    */
   public Page<Book> getAllBooksContainsTag( Integer tagId, Integer offset, Integer limit ) {
     Pageable nextPage = PageRequest.of( offset, limit );
@@ -160,10 +160,10 @@ public class BookService {
 
   /**
    * Тут мы получаем пачками книги по жанрам
-   * @param genreId
-   * @param offset
-   * @param limit
-   * @return
+   * @param genreId - id жанра
+   * @param offset - сдвиг
+   * @param limit - лимит
+   * @return - пачка книг
    */
   public Page<Book> getAllBooksContainsGenre( Integer genreId, Integer offset, Integer limit ) {
     Pageable nextPage = PageRequest.of( offset, limit );
@@ -178,16 +178,15 @@ public class BookService {
   }
 
   public List<Book> getBooksBySlugIn( String[] cookieSlugs ) {
-    List<Book> result = new ArrayList<>();
-    result = bookRepository.findBooksBySlugIn( cookieSlugs );
+    List<Book> result = bookRepository.findBooksBySlugIn( cookieSlugs );
     addAuthorsInBook( result );
     return result;
   }
 
   /**
    * Получить данные по оценкам и рейтингу книги
-   * @param slug
-   * @return
+   * @param slug - мнемонический идентификатор книги
+   * @return - объект рейтинга книги, (все оценки, среднее и сумма)
    */
   public RatingBookDto getLikeBookById( String slug ) {
     //Integer rating = bookLikeEntityRepository.customGetBookLikeByBookId( bookId );
@@ -197,7 +196,7 @@ public class BookService {
       return new RatingBookDto();
     }
     Map<Integer,List<BookLikeEntity>> map = list.stream().collect(Collectors.groupingBy( BookLikeEntity::getCountLike ) );
-    Integer rating = Math.round( list.stream().mapToLong( BookLikeEntity::getCountLike ).sum() / list.size() );
+    Long rating = list.stream().mapToLong(BookLikeEntity::getCountLike).sum() / list.size();
     Integer allRating = list.size();
 
     return new RatingBookDto( map, rating, allRating );
@@ -205,13 +204,13 @@ public class BookService {
 
   /**
    * Сохраняем оценки для книг
-   * @param bookSlug
-   * @param value
-   * @return
+   * @param bookSlug - мнемонический идентификатор книги
+   * @param value - кол-во зведочек
+   * @return - успех/(неуспех+сообщ об ошибке)
    */
   public ResultSaveDto saveBookLike( String bookSlug, String value ) {
     Book book = getBookBySlug( bookSlug );
-    BookLikeEntity result = new BookLikeEntity( -1, book.getId(), 1, LocalDateTime.now(), Integer.valueOf( value ) );
+    BookLikeEntity result = new BookLikeEntity( -1, book.getId(), 1, LocalDateTime.now(), Integer.parseInt( value ) );
     try {
       bookLikeEntityRepository.save( result );
       return new ResultSaveDto(  true, null );
@@ -222,9 +221,9 @@ public class BookService {
 
   /**
    * Сохранит отзыв на книгу
-   * @param bookSlug
-   * @param value
-   * @return
+   * @param bookSlug - мнемонический идентификатор книги
+   * @param value - отзыв
+   * @return - успех/(неуспех+сообщ об ошибке)
    */
   public ResultSaveDto saveBookReview( String bookSlug, String value ) {
     Book book = getBookBySlug( bookSlug );
@@ -239,8 +238,8 @@ public class BookService {
 
   /**
    * Возвращаем комментарии к книгам
-   * @param slug
-   * @return
+   * @param slug - мнемонический идентификатор книги
+   * @return - список ( комментарий + пользователь + лайки/дизлайки)
    */
   public List<ReviewInfoDto> getReviewBookById(String slug ) {
     List<ReviewInfoDto> result = new ArrayList<>();
@@ -275,13 +274,12 @@ public class BookService {
 
   /**
    * Сохраняем лайки на отзывы
-   * @param reviewid
-   * @param value
-   * @return
+   * @param reviewid - код отзыва
+   * @param value - лайк или дизлайк (1/-1)
+   * @return - успех или нет+сообщение об ошибке
    */
   public ResultSaveDto saveBookReviewLike( String reviewid, String value ) {
-    ResultSaveDto result = new ResultSaveDto();
-    BookReviewLikeEntity param = new BookReviewLikeEntity( -1, Integer.valueOf( reviewid ), Toolkit.userId, LocalDateTime.now(), Integer.valueOf( value ).shortValue() );
+    BookReviewLikeEntity param = new BookReviewLikeEntity( -1, Integer.parseInt( reviewid ), Toolkit.userId, LocalDateTime.now(), Integer.valueOf( value ).shortValue() );
 
     try {
       bookReviewLikeEntityRepository.save( param );

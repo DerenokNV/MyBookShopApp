@@ -14,7 +14,7 @@ import java.util.Map;
 public class RatingBookDto {
 
   private Map<Integer,List<BookLikeEntity>> allocationRating;
-  private Integer avgRating;
+  private Long avgRating;
   private Integer allRating;
 
 }
