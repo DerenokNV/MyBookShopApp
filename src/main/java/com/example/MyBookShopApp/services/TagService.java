@@ -17,9 +17,8 @@ import java.util.Optional;
 @Service
 public class TagService {
 
-  private Logger logger = Logger.getLogger(BookService.class);
-  private TagRepository tagRepository;
-  private Book2TagEntityRepository book2TagEntityRepository;
+  private final TagRepository tagRepository;
+  private final Book2TagEntityRepository book2TagEntityRepository;
 
   @Autowired
   public TagService( TagRepository tagRepository, Book2TagEntityRepository book2TagEntityRepository ) {
@@ -49,7 +48,7 @@ public class TagService {
 
   /**
    * Закиним книгам их тэги
-   * @param bookList
+   * @param bookList - список книг
    */
   public void addTadsInBook( List<Book> bookList ) {
     if ( bookList == null || bookList.isEmpty()) {

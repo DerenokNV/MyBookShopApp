@@ -31,9 +31,7 @@ public class BooksPageController {
   private final BookService bookService;
   private final TagService tagService;
   private final ResourceStorage storage;
-
   private final BookRepository bookRepository;
-  private Logger logger = Logger.getLogger(BooksPageController.class);
   @Autowired
   public BooksPageController( BookService bookService, TagService tagService, ResourceStorage storage, BookRepository bookRepository ) {
     this.bookService = bookService;

@@ -96,7 +96,7 @@ public class Book {
   @JsonProperty("discountPrice")
   public Integer discountPrice() {
     return getDiscount() != 0 ? getPrice() - ( getDiscount() * getPrice() / 100 ) : null;
-  };
+  }
 
   public void addAuthor( Author author ) {
     this.authorSet.add(author);
@@ -118,7 +118,7 @@ public class Book {
   }
 
   public void setAllAuthors() {
-    authorsString = authorSet == null && authorSet.isEmpty() ? "" : authorSet.stream().map( x -> x.getName() ).collect(Collectors.joining(","));
+    authorsString = authorSet == null || authorSet.isEmpty() ? "" : authorSet.stream().map( x -> x.getName() ).collect(Collectors.joining(","));
   }
 
 }

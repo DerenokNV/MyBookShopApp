@@ -18,10 +18,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class AuthorService {
-
-  private Logger logger = Logger.getLogger(AuthorService.class);
-  private AuthorRepository authorRepository;
-  private BookRepository bookRepository;
+  private final AuthorRepository authorRepository;
+  private final BookRepository bookRepository;
 
   @Autowired
   public AuthorService( AuthorRepository authorRepository, BookRepository bookRepository ) {
