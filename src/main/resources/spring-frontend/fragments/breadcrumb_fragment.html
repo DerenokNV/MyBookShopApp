@@ -29,32 +29,4 @@
     </li>
  </ul>
 
-
-
-
-<!--ul class="breadcrumbs" th:fragment="breadcrumps" th:if="${typeSlider} == 'tag' " >
-    <li class="breadcrumbs-item"><a th:href="@{/}" href="/">Главная</a>
-    </li>
-
-    <li class="breadcrumbs-item" >
-        <a th:href="@{/genres/index}" href="/genres/index.html">Книги</a>
-    </li>
-    <li class="breadcrumbs-item breadcrumbs-item_current" th:if="${typeSlider} == 'tag' " th:text="${category}"><span>Новинки</span>
-    </li>
-
-    <li class="breadcrumbs-item" th:unless="${typeSlider} == 'tag'" th:each="crumb, iStat: ${breadcrumbNames}" >
-        <a th:href="'/genres/slug/' + ${crumb.id}" th:unless="${iStat.last}" th:text="${crumb.name}" >Книги</a>
-    </li>
-    <li class="breadcrumbs-item breadcrumbs-item_current"
-        th:each="crumb, iStat: ${breadcrumbNames}"
-        th:unless="${typeSlider} == 'tag' "
-        th:if="${iStat.last}"
-        th:href="'/genres/slug/' + ${crumb.id}"
-        th:text="${crumb.name}"><span>Новинки</span>
-    </li>
-</ul>
-
-<ul class="breadcrumbs" th:fragment="breadcrumps" th:unless="${typeSlider} == 'tag' " >
-
-</ul-->
 </html>

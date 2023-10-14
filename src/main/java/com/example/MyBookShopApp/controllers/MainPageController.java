@@ -1,9 +1,10 @@
 package com.example.MyBookShopApp.controllers;
 
 import com.example.MyBookShopApp.data.*;
+import com.example.MyBookShopApp.data.struct.Book;
 import com.example.MyBookShopApp.data.struct.book.tag.Tag;
+import com.example.MyBookShopApp.errs.EmptySearchException;
 import com.example.MyBookShopApp.services.BookService;
-import com.example.MyBookShopApp.services.GenreService;
 import com.example.MyBookShopApp.services.TagService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,31 +81,16 @@ public class MainPageController {
     return new BooksPageDto( bookService.getPageOfRecommendedBooks( offset, limit ).getContent() );
   }
 
-  /*@GetMapping( "/books/recentMain" )
-  @ResponseBody
-  public BooksPageDto getRecentBooksPage( @RequestParam("dtFrom") LocalDateTime dtFrom,
-                                          @RequestParam("dtTo") LocalDateTime dtTo,
-                                          @RequestParam("offset") Integer offset,
-                                          @RequestParam("limit") Integer limit
-                                           ) {
-    logger.info("!!!!!!!!!!!!!!!! /books/recentMain = " + dtFrom + " :: " + dtTo );
-    return new BooksPageDto( bookService.getPageOfRecentBooks( dtFrom, dtTo, offset, limit ).getContent() );
-  }
-
-  @GetMapping( "/books/popularMain" )
-  @ResponseBody
-  public BooksPageDto getPopularBooksPage( @RequestParam("offset") Integer offset,
-                                          @RequestParam("limit") Integer limit ) {
-    logger.info("!!!!!!!!!!!!!!!! /books/popularMain = "  );
-    return new BooksPageDto( bookService.getPageOfPopularBooks( offset, limit ).getContent() );
-  }*/
-
-  @GetMapping( value = { "/search", "/search/{searchWord}"} )
+  @GetMapping( value = { "/search", "/search/", "/search/{searchWord}"} )
   public String getSearchResults( @PathVariable( value = "searchWord", required = false ) SearchWordDto searchWordDto,
-                                  Model model) {
-    model.addAttribute( "searchWordDto", searchWordDto );
-    model.addAttribute( "searchResults", bookService.getPageOfSearchResultBooks(searchWordDto.getExample(),0,5).getContent() );
-    return "/search/index";
+                                  Model model) throws EmptySearchException {
+    if ( searchWordDto != null ) {
+      model.addAttribute("searchWordDto", searchWordDto);
+      model.addAttribute("searchResults", bookService.getPageOfSearchResultBooks(searchWordDto.getExample(), 0, 5).getContent());
+      return "/search/index";
+    } else {
+      throw new EmptySearchException( "Поиск по null невозможен" );
+    }
   }
 
   @GetMapping( "/search/page/{searchWord}" )

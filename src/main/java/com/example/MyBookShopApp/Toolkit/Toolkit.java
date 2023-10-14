@@ -3,25 +3,25 @@ package com.example.MyBookShopApp.Toolkit;
 import org.apache.log4j.Logger;
 
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Toolkit {
 
+  public static Integer userId = 0;
   public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-  private static final Logger logger = Logger.getLogger( Toolkit.class );
 
-  public static Long calcSaleBook( String priceOld, String price ) {
-    Long result = null;
-    if ( priceOld == null || price == null ) {
-      return result;
+  public static boolean isBookSlugCash( String cash,String slug ) {
+    if ( cash.isEmpty() ) {
+      return false;
     }
+    List<String> convertedCountriesList = Stream.of( cash.split("/" ) ).collect( Collectors.toList() );
+    Optional opt = convertedCountriesList.stream().filter( x -> Objects.equals( x, slug ) ).findAny();
 
-    try {
-      Double priceOldInt = Double.valueOf( priceOld );
-      Double priceInt = Double.valueOf( price );
-      result = Math.round( priceInt / priceOldInt * 100 );
-    } catch ( Exception e ) {
-      logger.info( "Error calculeted sale book, error " + e.getMessage() );
-    }
-    return result;
+    return opt.isPresent();
   }
+
 }

@@ -5,7 +5,7 @@
     <meta name="description" content="Описание страницы">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-    <link href="favicon.ico" rel="shortcut icon">
+    <!--link href="favicon.ico" rel="shortcut icon"-->
     <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-SemiBold.woff2" as="font" crossorigin="anonymous">
     <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-Light.woff2" as="font" crossorigin="anonymous">
     <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-Medium.woff2" as="font" crossorigin="anonymous">
@@ -28,8 +28,12 @@
         <main class="Middle-main">
             <h1 class="Middle-title">Отложенное
             </h1>
+
             <form class="form Cart Cart_postponed" action="#" method="post">
-                <div class="Cart-product">
+                <div class="Cart-product"
+                     th:replace="~{fragments/books_cart_product_fragment :: product(status='KEPT')}">
+                </div>
+                <!--div class="Cart-product" th:each="book : ${bookCart}">
                     <div class="Cart-block Cart-block_row">
                         <div class="Cart-block Cart-block_pict"><a class="Cart-pict" href="#"><img class="Cart-img"
                                                                                                    src="/assets/img/content/main/card.jpg"
@@ -109,8 +113,9 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="Cart-product">
+                </div-->
+
+                <!--div class="Cart-product">
                     <div class="Cart-block Cart-block_row">
                         <div class="Cart-block Cart-block_pict"><a class="Cart-pict" href="#"><img class="Cart-img"
                                                                                                    src="/assets/img/content/main/card.jpg"
@@ -279,7 +284,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div-->
                 <div class="Cart-total">
                     <div class="Cart-block Cart-block_total">
                     </div>

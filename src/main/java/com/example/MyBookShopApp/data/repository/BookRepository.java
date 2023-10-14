@@ -1,6 +1,7 @@
-package com.example.MyBookShopApp.data;
+package com.example.MyBookShopApp.data.repository;
 
 
+import com.example.MyBookShopApp.data.struct.Book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book,Integer> {
@@ -16,6 +18,11 @@ public interface BookRepository extends JpaRepository<Book,Integer> {
   Page<Book> findBookByPubDateBetween( LocalDateTime publicationDateFrom, LocalDateTime publicationDateTo, Pageable nextPage );
 
   Page<Book> findBookByTitleContaining( String bootTitle, Pageable nextPage );
+
+  Book findBookBySlug( String slug );
+  List<Book> findBooksByTitle( String title );
+  List<Book> findBooksByTitleContaining( String title );
+  List<Book> findBooksBySlugIn( String[] slugs );
 
   @Query( value = "select * from BOOKS b where b.is_bestseller = 1",
           countQuery = "select count(*) from BOOKS",

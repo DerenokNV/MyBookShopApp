@@ -1,4 +1,4 @@
-package com.example.MyBookShopApp.data;
+package com.example.MyBookShopApp.data.struct;
 
 import com.example.MyBookShopApp.data.struct.book.links.Book2AuthorEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;

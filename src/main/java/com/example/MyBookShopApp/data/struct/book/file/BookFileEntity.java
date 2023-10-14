@@ -1,5 +1,7 @@
 package com.example.MyBookShopApp.data.struct.book.file;
 
+import com.example.MyBookShopApp.data.struct.Book;
+import com.example.MyBookShopApp.data.struct.enums.BookFileType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,12 +20,18 @@ public class BookFileEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
 
-  @Column(columnDefinition = "VARCHAR(255) NOT NULL")
   private String hash;
 
-  @Column(columnDefinition = "VARCHAR(255) NOT NULL")
   private String path;
 
-  @Column(columnDefinition = "INT NOT NULL  DEFAULT 0")
-  private int type_id;
+  @Column(name="type_id")
+  private int typeId;
+
+  @ManyToOne
+  @JoinColumn(name="book_id", referencedColumnName = "id")
+  private Book book;
+
+  public String getBookFileExtensionString(){
+    return BookFileType.getExtensionStringByTypeID( typeId );
+  }
 }

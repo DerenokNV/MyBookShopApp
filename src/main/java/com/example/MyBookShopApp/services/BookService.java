@@ -1,18 +1,27 @@
 package com.example.MyBookShopApp.services;
 
-import com.example.MyBookShopApp.data.*;
+import com.example.MyBookShopApp.Toolkit.LogUtils;
+import com.example.MyBookShopApp.Toolkit.Toolkit;
+import com.example.MyBookShopApp.data.RatingBookDto;
+import com.example.MyBookShopApp.data.ResultSaveDto;
+import com.example.MyBookShopApp.data.ReviewInfoDto;
+import com.example.MyBookShopApp.data.repository.*;
+import com.example.MyBookShopApp.data.struct.Author;
+import com.example.MyBookShopApp.data.struct.Book;
 import com.example.MyBookShopApp.data.struct.book.links.Book2AuthorEntity;
-import org.apache.log4j.Logger;
+import com.example.MyBookShopApp.data.struct.book.review.BookLikeEntity;
+import com.example.MyBookShopApp.data.struct.book.review.BookReviewEntity;
+import com.example.MyBookShopApp.data.struct.book.review.BookReviewLikeEntity;
+import com.example.MyBookShopApp.errs.BookstoreApiWrongParameterException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class BookService {
@@ -20,16 +29,28 @@ public class BookService {
   private BookRepository bookRepository;
   private AuthorRepository authorRepository;
   private Book2AuthorEntityRepository book2AuthorEntityRepository;
-  private Logger logger = Logger.getLogger(BookService.class);
+  private TagService tagService;
+
+  private BookLikeEntityRepository bookLikeEntityRepository;
+  private BookReviewEntityRepository bookReviewEntityRepository;
+  private UserEntityRepository userEntityRepository;
+  private BookReviewLikeEntityRepository bookReviewLikeEntityRepository;
 
   @Autowired
-  public BookService( BookRepository bookRepository, AuthorRepository authorRepository, Book2AuthorEntityRepository book2AuthorEntityRepository) {
+  public BookService( BookRepository bookRepository, AuthorRepository authorRepository, Book2AuthorEntityRepository book2AuthorEntityRepository,
+                      TagService tagService, BookLikeEntityRepository bookLikeEntityRepository, BookReviewEntityRepository bookReviewEntityRepository,
+                      UserEntityRepository userEntityRepository, BookReviewLikeEntityRepository bookReviewLikeEntityRepository ) {
     this.bookRepository = bookRepository;
     this.authorRepository = authorRepository;
     this.book2AuthorEntityRepository = book2AuthorEntityRepository;
+    this.tagService = tagService;
+    this.bookLikeEntityRepository = bookLikeEntityRepository;
+    this.bookReviewEntityRepository = bookReviewEntityRepository;
+    this.userEntityRepository = userEntityRepository;
+    this.bookReviewLikeEntityRepository = bookReviewLikeEntityRepository;
   }
 
-  public List<Book> getBooksByAuthor( String author ) {
+  public List<Book> getBooksByAuthor(String author ) {
     List<Book> result =  new ArrayList();
     List<Book> booksList =  getBooksData();
     for( Book bookList : booksList ) {
@@ -43,18 +64,23 @@ public class BookService {
     return result == null ? new ArrayList() : result;
   }
 
+  /**
+   * Получаем всех авторов
+   * @param bookList
+   */
   public void addAuthorsInBook( List<Book> bookList ) {
+    if ( bookList == null || bookList.isEmpty()) {
+      return;
+    }
     for (Book book : bookList) {
-      List<Book2AuthorEntity> linkList = book2AuthorEntityRepository.findBook2authorByBookId(book.getId());
+      List<Book2AuthorEntity> linkList = book2AuthorEntityRepository.findBook2authorByBookId( book.getId() );
       for (Book2AuthorEntity link : linkList) {
         Optional<Author> oiptAuthor = authorRepository.findById( link.getAuthor().getId() );
         if (oiptAuthor.isPresent()) {
           book.addAuthor(oiptAuthor.get());
         }
       }
-      if (book.getDiscount() != 0) {
-        book.setSale((long) (book.getPrice() - (book.getDiscount() * book.getPrice() / 100)));
-      }
+
       book.setAllAuthors();
     }
   }
@@ -74,7 +100,6 @@ public class BookService {
 
   public Page<Book> getPageOfRecentBooks( LocalDateTime dtFrom, LocalDateTime dtTo, Integer offset, Integer limit ) {
     Pageable nextPage = PageRequest.of( offset, limit );
-    //logger.info( "getPageOfRecentBooks = " + dtFrom + " :: " + dtTo );
     dtFrom = dtFrom == null ? LocalDateTime.now().minusMonths( 3 ) : dtFrom;
     dtTo = dtTo == null ? LocalDateTime.now() : dtTo;
     Page<Book> booksPage = bookRepository.findBookByPubDateBetween( dtFrom, dtTo, nextPage );
@@ -103,6 +128,25 @@ public class BookService {
   }
 
   /**
+   * Получить книги по Названию ( title% )
+   * @param title
+   * @return
+   * @throws BookstoreApiWrongParameterException
+   */
+  public List<Book> getBooksByTitle( String title ) throws BookstoreApiWrongParameterException {
+    if ( title == null || title.isEmpty() ) {
+      throw new BookstoreApiWrongParameterException( "Wrong values passed to one or more parameters" );
+    } else {
+      List<Book> data = bookRepository.findBooksByTitleContaining(title);
+      if ( data != null ||  !data.isEmpty() ){
+        return data;
+      } else {
+        throw new BookstoreApiWrongParameterException( "No data found with specified parameters..." );
+      }
+    }
+  }
+
+  /**
    * Тут мы получаем пачками книги по тегам
    * @param tagId
    * @param offset
@@ -125,4 +169,126 @@ public class BookService {
     Pageable nextPage = PageRequest.of( offset, limit );
     return bookRepository.customFindBookByIdGenre( genreId, nextPage );
   }
+
+  public Book getBookBySlug( String slug ) {
+    Book result = bookRepository.findBookBySlug( slug );
+    addAuthorsInBook( Arrays.asList( result ) );
+    tagService.addTadsInBook( Arrays.asList( result ) );
+    return result;
+  }
+
+  public List<Book> getBooksBySlugIn( String[] cookieSlugs ) {
+    List<Book> result = new ArrayList<>();
+    result = bookRepository.findBooksBySlugIn( cookieSlugs );
+    addAuthorsInBook( result );
+    return result;
+  }
+
+  /**
+   * Получить данные по оценкам и рейтингу книги
+   * @param slug
+   * @return
+   */
+  public RatingBookDto getLikeBookById( String slug ) {
+    //Integer rating = bookLikeEntityRepository.customGetBookLikeByBookId( bookId );
+    Book book = getBookBySlug( slug );
+    List<BookLikeEntity> list = bookLikeEntityRepository.findAllByBookId( book.getId() );
+    if ( list == null || list.isEmpty() ) {
+      return new RatingBookDto();
+    }
+    Map<Integer,List<BookLikeEntity>> map = list.stream().collect(Collectors.groupingBy( BookLikeEntity::getCountLike ) );
+    Integer rating = Math.round( list.stream().mapToLong( BookLikeEntity::getCountLike ).sum() / list.size() );
+    Integer allRating = list.size();
+
+    return new RatingBookDto( map, rating, allRating );
+  }
+
+  /**
+   * Сохраняем оценки для книг
+   * @param bookSlug
+   * @param value
+   * @return
+   */
+  public ResultSaveDto saveBookLike( String bookSlug, String value ) {
+    Book book = getBookBySlug( bookSlug );
+    BookLikeEntity result = new BookLikeEntity( -1, book.getId(), 1, LocalDateTime.now(), Integer.valueOf( value ) );
+    try {
+      bookLikeEntityRepository.save( result );
+      return new ResultSaveDto(  true, null );
+    } catch ( Exception ex ){
+      return new ResultSaveDto(  false, ex.getMessage() );
+    }
+  }
+
+  /**
+   * Сохранит отзыв на книгу
+   * @param bookSlug
+   * @param value
+   * @return
+   */
+  public ResultSaveDto saveBookReview( String bookSlug, String value ) {
+    Book book = getBookBySlug( bookSlug );
+    BookReviewEntity result = new BookReviewEntity( -1, book.getId(), 2, LocalDateTime.now(), value );
+    try {
+      bookReviewEntityRepository.save( result );
+      return new ResultSaveDto(  true, null );
+    } catch ( Exception ex ){
+      return new ResultSaveDto(  false, ex.getMessage() );
+    }
+  }
+
+  /**
+   * Возвращаем комментарии к книгам
+   * @param slug
+   * @return
+   */
+  public List<ReviewInfoDto> getReviewBookById(String slug ) {
+    List<ReviewInfoDto> result = new ArrayList<>();
+
+    Book book = getBookBySlug(slug);
+    List<BookReviewEntity> reviews = bookReviewEntityRepository.findAllByBookId( book.getId() );
+
+    if ( reviews.isEmpty() ) {
+      return result;
+    }
+
+    // подцепим информацию о пользователе
+    for ( BookReviewEntity res : reviews ) {
+      ReviewInfoDto param = new ReviewInfoDto();
+      param.setReview( res );
+      param.setUser( userEntityRepository.findUserById( res.getUserId() ) );
+      result.add( param );
+    }
+
+    // лайки и дизлайки комментариев
+    for ( ReviewInfoDto res : result ) {
+      List<BookReviewLikeEntity> reviewLike = bookReviewLikeEntityRepository.findBookReviewLikeByReviewId( res.getReview().getId() );
+      if ( reviewLike == null || reviewLike.isEmpty() ) {
+        continue;
+      }
+      res.setLike( reviewLike.stream().filter( x -> x.getValue() == 1 ).collect( Collectors.toSet() ) );
+      res.setLike( reviewLike.stream().filter( x -> x.getValue() != 1 ).collect( Collectors.toSet() ) );
+    }
+
+    return result;
+  }
+
+  /**
+   * Сохраняем лайки на отзывы
+   * @param reviewid
+   * @param value
+   * @return
+   */
+  public ResultSaveDto saveBookReviewLike( String reviewid, String value ) {
+    ResultSaveDto result = new ResultSaveDto();
+    BookReviewLikeEntity param = new BookReviewLikeEntity( -1, Integer.valueOf( reviewid ), Toolkit.userId, LocalDateTime.now(), Integer.valueOf( value ).shortValue() );
+
+    try {
+      bookReviewLikeEntityRepository.save( param );
+      return new ResultSaveDto(  true, null );
+    } catch ( Exception ex ){
+      return new ResultSaveDto(  false, ex.getMessage() );
+    }
+  }
+
 }

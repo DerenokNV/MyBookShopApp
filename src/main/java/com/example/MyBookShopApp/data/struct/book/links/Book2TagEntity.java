@@ -1,6 +1,6 @@
 package com.example.MyBookShopApp.data.struct.book.links;
 
-import com.example.MyBookShopApp.data.Book;
+import com.example.MyBookShopApp.data.struct.Book;
 import com.example.MyBookShopApp.data.struct.book.tag.Tag;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;

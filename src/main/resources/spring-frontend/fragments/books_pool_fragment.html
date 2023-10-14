@@ -10,9 +10,9 @@
             </strong>
             <div class="Card-description" th:text="${book.authorsString}"></div>
             <div class="Card-cost">
-                <span class="Card-price" th:if="${book.discount == 0}" th:text="${book.price}">₽300.00</span>
-                <span class="Card-priceOld" th:unless="${book.discount == 0}" th:text="${book.price}">₽300.00</span>
-                <span class="Card-price" th:unless="${book.discount == 0}" th:text="${book.sale}">₽700.00</span>
+                <span class="Card-price" th:if="${book.discount == 0}" th:text=" '$' + ${book.price} ">₽300.00</span>
+                <span class="Card-priceOld" th:unless="${book.discount == 0}" th:text=" '$' + ${book.price} ">₽300.00</span>
+                <span class="Card-price" th:unless="${book.discount == 0}" th:text=" '$' + ${book.discountPrice()} ">₽700.00</span>
             </div>
         </div>
     </div>

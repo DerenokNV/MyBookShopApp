@@ -1,18 +1,19 @@
-package com.example.MyBookShopApp.data;
+package com.example.MyBookShopApp.data.struct;
 
 
+import com.example.MyBookShopApp.data.struct.book.file.BookFileEntity;
 import com.example.MyBookShopApp.data.struct.book.links.Book2AuthorEntity;
 import com.example.MyBookShopApp.data.struct.book.links.Book2TagEntity;
-import com.example.MyBookShopApp.services.BookService;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.example.MyBookShopApp.data.struct.book.tag.Tag;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import jakarta.persistence.*;
 import lombok.*;
-import org.apache.log4j.Logger;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -57,16 +58,12 @@ public class Book {
   @ApiModelProperty( "if isBestseller = 1 so the book is considered to be bestseller" )
   private short isBestseller;
 
-  @Column(columnDefinition = "VARCHAR(255) NOT NULL")
   private String slug;
 
-  @Column(columnDefinition = "VARCHAR(255) NOT NULL")
   private String title;
 
-  @Column(columnDefinition = "VARCHAR(255)")
   private String image;
 
-  @Column(columnDefinition = "TEXT")
   private String description;
 
   @Column(columnDefinition = "INT NOT NULL")
@@ -77,9 +74,6 @@ public class Book {
   private short discount;
 
   @Transient
-  private Long sale;
-
-  @Transient
   private String authorsString;
 
   @OneToMany(mappedBy = "book")
@@ -87,14 +81,30 @@ public class Book {
   @Transient
   Set<Book2TagEntity> tagsBook;
 
+  @Transient
+  @JsonProperty
+  private Set<Tag> valueTagsBook = new HashSet<>();
+
   @OneToMany(mappedBy = "book")
   @JsonManagedReference
   @Transient
   Set<Book2TagEntity> genresBook;
 
+  @OneToMany(mappedBy = "book")
+  private List<BookFileEntity> bookFileList = new ArrayList<>();
+
+  @JsonProperty("discountPrice")
+  public Integer discountPrice() {
+    return getDiscount() != 0 ? getPrice() - ( getDiscount() * getPrice() / 100 ) : null;
+  };
+
   public void addAuthor( Author author ) {
     this.authorSet.add(author);
     //author.getBookSet().add(this);
+  }
+
+  public void addTag( Tag tag ) {
+    this.valueTagsBook.add( tag );
   }
 
   /*public void addAuthors( List<Author> authors ) {

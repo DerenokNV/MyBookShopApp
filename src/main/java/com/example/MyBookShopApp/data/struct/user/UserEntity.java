@@ -1,5 +1,7 @@
 package com.example.MyBookShopApp.data.struct.user;
 
+import com.example.MyBookShopApp.data.struct.book.links.Book2AuthorEntity;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Getter
 @Builder
@@ -20,15 +23,12 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(columnDefinition = "VARCHAR(255) NOT NULL")
     private String hash;
 
-    @Column(columnDefinition = "TIMESTAMP NOT NULL")
     private LocalDateTime regTime;
 
-    @Column(columnDefinition = "INT NOT NULL")
     private int balance;
 
-    @Column(columnDefinition = "VARCHAR(255) NOT NULL")
     private String name;
+
 }

@@ -1,7 +1,10 @@
 package com.example.MyBookShopApp.services;
 
-import com.example.MyBookShopApp.controllers.AuthorsController;
 import com.example.MyBookShopApp.data.*;
+import com.example.MyBookShopApp.data.repository.AuthorRepository;
+import com.example.MyBookShopApp.data.repository.BookRepository;
+import com.example.MyBookShopApp.data.struct.Author;
+import com.example.MyBookShopApp.data.struct.Book;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,7 +38,7 @@ public class AuthorService {
     return new AuthorBooks( author, getAuthorPageBooksData( authorId, offset, limit ) );
   }
 
-  public Page<Book> getAuthorPageBooksData( Integer authorId, Integer offset, Integer limit ) {
+  public Page<Book> getAuthorPageBooksData(Integer authorId, Integer offset, Integer limit ) {
     Pageable nextPage = PageRequest.of( offset, limit );
     return bookRepository.customFindBookByIdAuthor( authorId, nextPage );
   }

@@ -1,5 +1,6 @@
 package com.example.MyBookShopApp.data;
 
+import com.example.MyBookShopApp.data.struct.Book;
 import lombok.*;
 
 import java.util.List;

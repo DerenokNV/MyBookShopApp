@@ -1,11 +1,10 @@
 package com.example.MyBookShopApp.config;
 
-import com.example.MyBookShopApp.data.BookRepository;
+import com.example.MyBookShopApp.data.repository.BookRepository;
 import com.example.MyBookShopApp.dataExample.TestEntity;
 import com.example.MyBookShopApp.dataExample.TestEntityCrudRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Configuration;
 
 import java.util.Optional;
 import java.util.logging.Logger;

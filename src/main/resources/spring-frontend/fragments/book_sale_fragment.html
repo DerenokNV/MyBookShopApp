@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <div class="Card-picture" th:fragment="bookSale">
-   <a href="#a" th:href="${book.id}">
+   <a href="#" th:href="@{'/books/' + ${book.slug}}" >
       <img th:src="${book.image}" alt="card.jpg"/>
       <div class="Card-sale" id="Card-sale_id" th:if="${book.discount != null}" th:text="${book.discount} + '%скидка'">30% скидка</div>
    </a>

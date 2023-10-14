@@ -1,9 +1,8 @@
-package com.example.MyBookShopApp.data;
+package com.example.MyBookShopApp.data.repository;
 
+import com.example.MyBookShopApp.data.struct.Author;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public interface AuthorRepository extends JpaRepository<Author,Integer> {
