@@ -10,43 +10,7 @@
                                                                                                 alt="logo.png"/><span
                         class="logo-text">BOOKSHOP</span></a>
                 </div>
-                <div><button id="user" onclick="myFunction()">User set</button></div>
-                <script>
-                    var set=false;
-                    function myFunction() {
-                      if ( document.getElementById("user").innerHTML === 'User set' ) {
-                        set = true;
-                        document.getElementById("user").innerHTML = 'User get'
-                      } else {
-                        set = false;
-                        document.getElementById("user").innerHTML = 'User set'
-                      }
-                      postData('/books/test', {
-                          value: set
-                      }, function (result) {
-                      });
-                    }
 
-                function postData(address, data, cb, cbErr) {
-                $.ajax({
-                    url: address,
-                    type: 'POST',
-                    dataType: 'json',
-                    data: data,
-                    complete: function (result) {
-                        if (result.status === 200) {
-                            cb(result.responseJSON);
-                        } else {
-                            alert('Ошибка ' + result.status);
-                            if (cbErr) {
-                                cbErr(result.responseJSON);
-                            }
-                        }
-                    }
-                });
-                }
-
-                </script>
                 <div class="Header-searchWrap row-block">
                     <div class="Header-searchLink">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19">

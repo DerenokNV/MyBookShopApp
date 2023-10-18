@@ -14,11 +14,6 @@ public class EventPageController {
     return new SearchWordDto();
   }
 
-  @GetMapping("/signin")
-  public String signinPages() {
-    return "signin";
-  }
-
   @GetMapping("/documents")
   public String documentsPages() {
     return "/documents/index";

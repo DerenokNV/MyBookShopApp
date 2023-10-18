@@ -1,6 +1,5 @@
 package com.example.MyBookShopApp.controllers;
 
-import com.example.MyBookShopApp.Toolkit.LogUtils;
 import com.example.MyBookShopApp.Toolkit.Toolkit;
 import com.example.MyBookShopApp.data.*;
 import com.example.MyBookShopApp.data.repository.BookRepository;
@@ -8,6 +7,7 @@ import com.example.MyBookShopApp.data.struct.Book;
 import com.example.MyBookShopApp.services.BookService;
 import com.example.MyBookShopApp.services.ResourceStorage;
 import com.example.MyBookShopApp.services.TagService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -25,6 +25,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Controller
+@Slf4j
 @RequestMapping("/books")
 public class BooksPageController {
 
@@ -138,7 +139,7 @@ public class BooksPageController {
 
   @PostMapping("/test")
   public String testUser( @RequestParam("value") Boolean value ) {
-    LogUtils.log.info( "is USER ID  = " + value );
+    log.info( "is USER ID  = " + value );
     Toolkit.userId = value ? 1 : 0;
     return ("redirect:/" );
   }
